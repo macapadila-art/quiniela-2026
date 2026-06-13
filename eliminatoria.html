@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiniela Mundial 2026 - Segunda Fase</title>
+    <style>
+        :root {
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --primary-blue: #1a73e8;
+            --accent-gold: #ffca28;
+            --text-main: #ffffff;
+            --text-muted: #aaaaaa;
+            --border-color: #333333;
+            --success-green: #4caf50;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 700px;
+            margin-bottom: 25px;
+        }
+
+        .header-card {
+            background-color: #0d47a1;
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .header-card h1 {
+            margin: 0 0 10px 0;
+            font-size: 1.6rem;
+        }
+
+        .header-card p {
+            margin: 0;
+            color: #e0e0e0;
+            font-size: 0.95rem;
+        }
+
+        .usuario-box {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        /* Estructura de las Llaves / Rondas */
+        .ronda-titulo {
+            font-size: 1.2rem;
+            color: var(--accent-gold);
+            margin: 25px 0 15px 0;
+            border-left: 4px solid var(--accent-gold);
+            padding-left: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .partido-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .partido-info {
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .fila-equipos {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .bloque-equipo {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .bloque-equipo.local { justify-content: flex-end; text-align: right; }
+        .bloque-equipo.visitante { justify-content: flex-start; text-align: left; }
+
+        .nombre-equipo {
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .input-goles {
+            width: 55px;
+            padding: 10px;
+            background-color: #2a2a2a;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: white;
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        .vs {
+            font-weight: bold;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Regla de Desempate (Penales) */
+        .penales-box {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 12px;
+            padding-top: 10px;
+            border-top: 1px dashed #333;
+            font-size: 0.85rem;
+            color: var(--accent-gold);
+        }
+
+        .input-penales {
+            width: 45px;
+            padding: 5px;
+            background-color: #222;
+            border: 1px solid #444;
+            border-radius: 6px;
+            color: var(--accent-gold);
+            text-align: center;
+            font-weight: bold;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background-color: var(--success-green);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 15px;
+        }
+
+        button:hover {
+            background-color: #388e3c;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .nav-links a {
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header-card">
+            <h1>🏆 Fase de Eliminación Directa</h1>
+            <p>Pronostica los encuentros a muerte súbita. ¡Si hay empate, define los penales!</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="usuario-box">
+            <label style="display:block; font-size:0.85rem; color:var(--text-muted); margin-bottom:5px; font-weight:bold;">TU NOMBRE DE PARTICIPANTE:</label>
+            <input type="text" id="nombreUsuario" placeholder="Escribe tu nombre exactamente igual al usado antes" style="width:100%; padding:12px; background-color:#2a2a2a; border:1px solid var(--border-color); border-radius:8px; color:white; font-size:1rem; box-sizing:border-box;">
+        </div>
+
+        <form id="quinielaEliminatoriaForm">
+            <div id="partidosEliminatoriosContainer"></div>
+
+            <button type="button" id="btnGuardarFase2">Guardar Predicciones Segunda Fase</button>
+        </form>
+
+        <div class="nav-links">
+            <a href="index.html">← Ir a Fase de Grupos</a>
+            <a href="posiciones.html">Ver Tabla de Posiciones 📊</a>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD_dXyyPTCUFfA_uJs6gxSyaBmbbn2Eh14",
+            authDomain: "quiniela-mundial-2026-baf3b.firebaseapp.com",
+            projectId: "quiniela-mundial-2026-baf3b",
+            storageBucket: "quiniela-mundial-2026-baf3b.firebasestorage.app",
+            messagingSenderId: "47313550839",
+            appId: "1:47313550839:web:4341e05d36eab06d79c2f2",
+            measurementId: "G-RK1XCFTM37"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Estructura de llaves de la segunda fase
+        const estructuraEliminatoria = {
+            "Dieciseisavos de Final (Ronda de 32)": [
+                { id: "R32_1", local: "Por Definir", visitante: "Por Definir", info: "Llave 1 - 28 de Junio" },
+                { id: "R32_2", local: "Por Definir", visitante: "Por Definir", info: "Llave 2 - 28 de Junio" },
+                { id: "R32_3", local: "Por Definir", visitante: "Por Definir", info: "Llave 3 - 29 de Junio" },
+                { id: "R32_4", local: "Por Definir", visitante: "Por Definir", info: "Llave 4 - 29 de Junio" }
+            ],
+            "Octavos de Final": [
+                { id: "R16_1", local: "Ganador Llave 1", visitante: "Ganador Llave 2", info: "Octavos - 4 de Julio" },
+                { id: "R16_2", local: "Ganador Llave 3", visitante: "Ganador Llave 4", info: "Octavos - 5 de Julio" }
+            ],
+            "Cuartos de Final": [
+                { id: "R8_1", local: "Ganador Octavos 1", visitante: "Ganador Octavos 2", info: "Cuartos - 9 de Julio" }
+            ],
+            "Semifinal y Final": [
+                { id: "SEMI_1", local: "Ganador Cuartos 1", visitante: "Ganador Cuartos 2", info: "Semifinal - 14 de Julio" },
+                { id: "FINAL", local: "Ganador Semi 1", visitante: "Ganador Semi 2", info: "GRAN FINAL - 19 de Julio" }
+            ]
+        };
+
+        // Renderizar dinámicamente los partidos en pantalla
+        function renderizarPartidos() {
+            const container = document.getElementById("partidosEliminatoriosContainer");
+            container.innerHTML = "";
+
+            Object.keys(estructuraEliminatoria).forEach(rondaNombre => {
+                const titulo = document.createElement("div");
+                titulo.className = "ronda-titulo";
+                titulo.innerText = rondaNombre;
+                container.appendChild(titulo);
+
+                estructuraEliminatoria[rondaNombre].forEach(partido => {
+                    const card = document.createElement("div");
+                    card.className = "partido-card";
+                    card.innerHTML = `
+                        <div class="partido-info">${partido.info}</div>
+                        <div class="fila-equipos">
+                            <div class="bloque-equipo local">
+                                <span class="nombre-equipo">${partido.local}</span>
+                                <input type="number" id="home-${partido.id}" class="input-goles" min="0" placeholder="0">
+                            </div>
+                            <span class="vs">VS</span>
+                            <div class="bloque-equipo visitante">
+                                <input type="number" id="away-${partido.id}" class="input-goles" min="0" placeholder="0">
+                                <span class="nombre-equipo">${partido.visitante}</span>
+                            </div>
+                        </div>
+                        <div class="penales-box" id="penales-box-${partido.id}" style="display: none;">
+                            <span>Empate detectado. Definición por penales:</span>
+                            <input type="number" id="pen-home-${partido.id}" class="input-penales" min="0" placeholder="P">
+                            <span>-</span>
+                            <input type="number" id="pen-away-${partido.id}" class="input-penales" min="0" placeholder="P">
+                        </div>
+                    `;
+                    container.appendChild(card);
+
+                    // Escuchadores lógicos para mostrar la caja de penales si hay empate en los inputs de goles
+                    const inputH = card.querySelector(`#home-${partido.id}`);
+                    const inputA = card.querySelector(`#away-${partido.id}`);
+                    const pBox = card.querySelector(`#penales-box-${partido.id}`);
+
+                    const verificarEmpate = () => {
+                        if(inputH.value !== "" && inputA.value !== "" && parseInt(inputH.value) === parseInt(inputA.value)) {
+                            pBox.style.display = "flex";
+                        } else {
+                            pBox.style.display = "none";
+                        }
+                    };
+
+                    inputH.addEventListener("input", verificarEmpate);
+                    inputA.addEventListener("input", verificarEmpate);
+                });
+            });
+        }
+
+        // Guardar las predicciones del usuario en un documento dedicado de Firebase
+        async function guardarPrediccionesFase2() {
+            const usuario = document.getElementById("nombreUsuario").value.trim();
+            if (!usuario) {
+                alert("❌ Por favor, escribe tu nombre para asociar las predicciones.");
+                return;
+            }
+
+            const prediccionesFase2 = {};
+            let inputsValidos = true;
+
+            // Recorrer los partidos para recolectar los valores
+            Object.values(estructuraEliminatoria).flat().forEach(partido => {
+                const homeVal = document.getElementById(`home-${partido.id}`).value;
+                const awayVal = document.getElementById(`away-${partido.id}`).value;
+
+                if (homeVal !== "" && awayVal !== "") {
+                    prediccionesFase2[`home-${partido.id}`] = parseInt(homeVal);
+                    prediccionesFase2[`away-${partido.id}`] = parseInt(awayVal);
+
+                    // Guardar penales si hay empate técnico
+                    if (parseInt(homeVal) === parseInt(awayVal)) {
+                        const penH = document.getElementById(`pen-home-${partido.id}`).value;
+                        const penA = document.getElementById(`pen-away-${partido.id}`).value;
+                        
+                        if(penH === "" || penA === "" || parseInt(penH) === parseInt(penA)) {
+                            alert(`⚠️ En fases eliminatorias debe haber un ganador en penales (${partido.info}).`);
+                            inputsValidos = false;
+                        } else {
+                            prediccionesFase2[`pen-home-${partido.id}`] = parseInt(penH);
+                            prediccionesFase2[`pen-away-${partido.id}`] = parseInt(penA);
+                        }
+                    }
+                }
+            });
+
+            if (!inputsValidos) return;
+
+            try {
+                // Se guarda en una colección separada "predicciones_fase2" usando el nombre como ID del documento
+                await setDoc(doc(db, "predicciones_fase2", usuario), {
+                    usuario: usuario,
+                    predicciones: prediccionesFase2,
+                    fechaRegistro: new Date().toISOString()
+                });
+
+                alert("🎉 ¡Tus pronósticos de la Segunda Fase se guardaron con éxito!");
+            } catch (error) {
+                console.error("Error al guardar en Firebase:", error);
+                alert("Error al conectar con la base de datos de Firebase.");
+            }
+        }
+
+        document.getElementById("btnGuardarFase2").onclick = guardarPrediccionesFase2;
+        renderizarPartidos();
+    </script>
+</body>
+</html>
