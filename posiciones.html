@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Quiniela 2026 - Gestión Total</title>
+    <style>
+        body { background: #121212; color: #fff; font-family: sans-serif; padding: 20px; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 600px; }
+        .card { background: #1e1e1e; padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #333; }
+        h3 { color: #ffca28; text-align: center; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 10px; border-bottom: 1px solid #333; text-align: center; }
+        button { width: 100%; padding: 12px; margin-top: 10px; cursor: pointer; border: none; border-radius: 4px; font-weight: bold; }
+        .btn-guardar { background: #0a5c36; color: white; }
+        .btn-volver { background: #444; color: white; }
+        /* Estilos Acordeón */
+        .accordion { background: #2a2a2a; color: #ffca28; cursor: pointer; padding: 12px; width: 100%; border: none; text-align: left; margin-top: 5px; border-radius: 6px; font-weight: bold; }
+        .panel { padding: 0 10px; display: none; background-color: #1e1e1e; border-bottom: 1px solid #333; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <a href="index.html"><button class="btn-volver">⬅ Volver a Predicciones</button></a>
+    <div class="card">
+        <h3>📊 Puntos Participantes</h3>
+        <table id="tablaUsuarios"><thead><tr><th>Participante</th><th>Pts</th></tr></thead><tbody id="bodyUsuarios"></tbody></table>
+    </div>
+    <div class="card">
+        <h3>⚽ Posiciones Equipos</h3>
+        <div id="containerPosiciones"></div>
+    </div>
+    <div class="card">
+        <h3>🛠️ Admin: Registrar Resultado</h3>
+        <select id="selectPartido"></select>
+        <input type="number" id="golesL" placeholder="Local">
+        <input type="number" id="golesA" placeholder="Visitante">
+        <button class="btn-guardar" id="btnGuardar">Validar y Guardar Resultado</button>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, doc, getDoc, updateDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const db = getFirestore(initializeApp({ apiKey: "AIzaSyD_dXyyPTCUFfA_uJs6gxSyaBmbbn2Eh14", authDomain: "quiniela-mundial-2026-baf3b.firebaseapp.com", projectId: "quiniela-mundial-2026-baf3b", storageBucket: "quiniela-mundial-2026-baf3b.firebasestorage.app", messagingSenderId: "47313550839", appId: "1:47313550839:web:4341e05d36eab06d79c2f2" }));
+
+    const partidos = [ 
+        {id: 'A1', L: 'México', A: 'Sudáfrica'}, {id: 'A2', L: 'Corea del Sur', A: 'Rep. Checa'}, {id: 'A3', L: 'México', A: 'Corea del Sur'}, {id: 'A4', L: 'Rep. Checa', A: 'Sudáfrica'},
+        {id: 'B1', L: 'Canadá', A: 'Bosnia'}, {id: 'B2', L: 'Catar', A: 'Suiza'}, {id: 'B3', L: 'Canadá', A: 'Catar'}, {id: 'B4', L: 'Suiza', A: 'Bosnia'},
+        {id: 'C1', L: 'Brasil', A: 'Marruecos'}, {id: 'C2', L: 'Haití', A: 'Escocia'}, {id: 'C3', L: 'Brasil', A: 'Haití'}, {id: 'C4', L: 'Escocia', A: 'Marruecos'},
+        {id: 'D1', L: 'Estados Unidos', A: 'Paraguay'}, {id: 'D2', L: 'Australia', A: 'Turquía'}, {id: 'D3', L: 'Estados Unidos', A: 'Australia'}, {id: 'D4', L: 'Turquía', A: 'Paraguay'},
+        {id: 'E1', L: 'Alemania', A: 'Curazao'}, {id: 'E2', L: 'Costa de Marfil', A: 'Ecuador'}, {id: 'E3', L: 'Alemania', A: 'Costa de Marfil'}, {id: 'E4', L: 'Ecuador', A: 'Curazao'},
+        {id: 'F1', L: 'Paises Bajos', A: 'Japón'}, {id: 'F2', L: 'Suecia', A: 'Tunez'}, {id: 'F3', L: 'Paises Bajos', A: 'Suecia'}, {id: 'F4', L: 'Tunez', A: 'Japón'},
+        {id: 'G1', L: 'Bélgica', A: 'Egipto'}, {id: 'G2', L: 'Irán', A: 'Nueva Zelanda'}, {id: 'G3', L: 'Bélgica', A: 'Irán'}, {id: 'G4', L: 'Nueva Zelanda', A: 'Egipto'},
+        {id: 'H1', L: 'España', A: 'Cabo Verde'}, {id: 'H2', L: 'Arabia Saudita', A: 'Uruguay'}, {id: 'H3', L: 'España', A: 'Arabia Saudita'}, {id: 'H4', L: 'Uruguay', A: 'Cabo Verde'},
+        {id: 'I1', L: 'Francia', A: 'Senegal'}, {id: 'I2', L: 'Irak', A: 'Noruega'}, {id: 'I3', L: 'Francia', A: 'Irak'}, {id: 'I4', L: 'Noruega', A: 'Senegal'},
+        {id: 'J1', L: 'Argentina', A: 'Argelia'}, {id: 'J2', L: 'Austria', A: 'Jordania'}, {id: 'J3', L: 'Argentina', A: 'Austria'}, {id: 'J4', L: 'Jordania', A: 'Argelia'},
+        {id: 'K1', L: 'Portugal', A: 'RD Congo'}, {id: 'K2', L: 'Uzbekistán', A: 'Colombia'}, {id: 'K3', L: 'Portugal', A: 'Uzbekistán'}, {id: 'K4', L: 'Colombia', A: 'RD Congo'},
+        {id: 'L1', L: 'Inglaterra', A: 'Croacia'}, {id: 'L2', L: 'Ghana', A: 'Panamá'}, {id: 'L3', L: 'Inglaterra', A: 'Ghana'}, {id: 'L4', L: 'Panamá', A: 'Croacia'}
+    ];
+
+    const sel = document.getElementById('selectPartido');
+    partidos.forEach(p => sel.innerHTML += `<option value="${p.id}">${p.L} vs ${p.A}</option>`);
+
+    async function refrescar() {
+        try {
+            const resSnap = await getDoc(doc(db, "resultados", "fase_grupos"));
+            const res = resSnap.exists() ? resSnap.data() : {};
+            const users = await getDocs(collection(db, "predicciones"));
+
+            document.getElementById('bodyUsuarios').innerHTML = "";
+            users.forEach(u => {
+                let pts = 0;
+                const p = u.data().predicciones || {};
+                Object.keys(res).forEach(id => {
+                    if(!res[id].local) return;
+                    const realL = parseInt(res[id].local), realA = parseInt(res[id].away);
+                    const predL = parseInt(p['home-'+id]), predA = parseInt(p['away-'+id]);
+                    if(predL === realL && predA === realA) pts += 5;
+                    else if((predL > predA && realL > realA) || (predL < predA && realL < realA) || (predL === predA && realL === realA)) pts += 3;
+                });
+                document.getElementById('bodyUsuarios').innerHTML += `<tr><td>${u.data().usuario}</td><td>${pts}</td></tr>`;
+            });
+
+            const container = document.getElementById('containerPosiciones');
+            const grupos = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"];
+            if (container.innerHTML === "") {
+                grupos.forEach(letra => {
+                    container.innerHTML += `<button class="accordion">Grupo ${letra}</button><div class="panel"><table><thead><tr><th>Equipo</th><th>Pts</th></tr></thead><tbody id="body-grupo-${letra}"></tbody></table></div>`;
+                });
+                document.querySelectorAll(".accordion").forEach(acc => acc.onclick = function() {
+                    this.classList.toggle("active");
+                    let panel = this.nextElementSibling;
+                    panel.style.display = panel.style.display === "block" ? "none" : "block";
+                });
+            }
+
+            let ptsEq = {};
+            partidos.forEach(p => { ptsEq[p.L] = 0; ptsEq[p.A] = 0; });
+            Object.values(res).forEach(r => {
+                const p = partidos.find(x => x.id == r.id);
+                if(p) {
+                    const loc = parseInt(r.local), vis = parseInt(r.away);
+                    if(loc > vis) ptsEq[p.L] += 3; else if(loc < vis) ptsEq[p.A] += 3; else { ptsEq[p.L] += 1; ptsEq[p.A] += 1; }
+                }
+            });
+
+            grupos.forEach(letra => {
+                const tbody = document.getElementById(`body-grupo-${letra}`);
+                tbody.innerHTML = "";
+                const equipos = [...new Set(partidos.filter(p => p.id.startsWith(letra)).flatMap(p => [p.L, p.A]))];
+                equipos.forEach(eq => tbody.innerHTML += `<tr><td>${eq}</td><td>${ptsEq[eq] || 0}</td></tr>`);
+            });
+        } catch (e) { console.error("Error:", e); }
+    }
+
+    document.getElementById('btnGuardar').onclick = async () => {
+        // Validación de Administradores
+        const adminNombre = prompt("Ingrese su nombre para registrar el resultado:");
+        const administradoresValidos = ["Maria Carolina", "Gabriel Santiago"];
+        
+        if (!administradoresValidos.some(admin => admin.toLowerCase() === adminNombre?.trim().toLowerCase())) {
+            alert("Acceso denegado: Solo Maria Carolina o Gabriel Santiago pueden registrar resultados.");
+            return;
+        }
+
+        const id = sel.value;
+        await updateDoc(doc(db, "resultados", "fase_grupos"), { 
+            [id]: { 
+                local: document.getElementById('golesL').value, 
+                away: document.getElementById('golesA').value, 
+                id: id,
+                registradoPor: adminNombre 
+            } 
+        });
+        alert("Resultado guardado por " + adminNombre);
+        refrescar();
+    };
+
+    refrescar();
+</script>
+</body>
+</html>
