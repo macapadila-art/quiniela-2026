@@ -359,19 +359,7 @@
                 alert("Error al consultar el perfil solicitado.");
             }
         }
-function aplicarBloqueos() {
-    // Buscamos todos los partidos
-    document.querySelectorAll('.partido').forEach(partidoDiv => {
-        const jornada = partidoDiv.getAttribute('data-jornada');
-        
-        // Si es Jornada 1, bloqueamos sus inputs
-        if (jornada === 'Jornada 1') {
-            partidoDiv.querySelectorAll('input').forEach(input => {
-                input.disabled = true;
-            });
-        }
-    });
-}
+
 
 function aplicarBloqueos() {
     document.querySelectorAll('.partido').forEach(partidoDiv => {
