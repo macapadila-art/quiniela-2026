@@ -196,11 +196,10 @@
         </div>
     </div>
 
-    <<script type="module">
+    <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // ... (TU CONFIGURACIÓN DE FIREBASE SE QUEDA IGUAL) ...
         const firebaseConfig = {
             apiKey: "AIzaSyD_dXyyPTCUFfA_uJs6gxSyaBmbbn2Eh14",
             authDomain: "quiniela-mundial-2026-baf3b.firebaseapp.com",
@@ -210,79 +209,50 @@
             appId: "1:47313550839:web:4341e05d36eab06d79c2f2",
             measurementId: "G-RK1XCFTM37"
         };
+
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // ... (MANTÉN TU OBJETO cronogramaMundial Y LA FUNCIÓN renderizarEstructura) ...
-        // [AQUÍ VA TU CÓDIGO ACTUAL DE CRONOGRAMA Y RENDERIZADO]
+        // --- MANTÉN AQUÍ TU OBJETO cronogramaMundial Y LA FUNCIÓN renderizarEstructura ---
+        // (No los borres, solo ponlos aquí arriba)
 
-        async function bloquearCamposExistentes() {
-            const nombre = document.getElementById('nombreUsuario').value.trim().toLowerCase();
-            if (!nombre) return;
-
-            try {
-                const docSnap = await getDoc(doc(db, "predicciones", nombre));
-                if (docSnap.exists()) {
-                    const data = docSnap.data().predicciones || {};
-                    Object.keys(data).forEach(key => {
-                        const input = document.getElementById(key);
-                        if (input) {
-                            input.value = data[key];
-                            input.disabled = true; // Bloquea el campo ya guardado
-                        }
-                    });
-                }
-            } catch (e) {
-                console.error("Error al bloquear campos:", e);
-            }
-        }
-
-        async function guardarQuiniela() {
-            const nombreOriginal = document.getElementById('nombreUsuario').value.trim();
-            if (!nombreOriginal) {
-                alert("❌ Por favor, escribe tu nombre.");
-                return;
-            }
-
-            const userIdNormalizado = nombreOriginal.toLowerCase();
-            const docRef = doc(db, "predicciones", userIdNormalizado);
-            const docSnap = await getDoc(docRef);
-            let prediccionesExistentes = docSnap.exists() ? docSnap.data().predicciones : {};
-
-            let guardado = false;
-            document.querySelectorAll('.input-goles').forEach(input => {
-                if (input.value !== "" && !input.disabled) {
-                    prediccionesExistentes[input.id] = input.value.toString();
-                    guardado = true;
-                }
-            });
-
-            if (!guardado) {
-                alert("No hay nuevos marcadores para guardar.");
-                return;
-            }
-
-            try {
-                await setDoc(docRef, {
-                    usuario: nombreOriginal,
-                    predicciones: prediccionesExistentes,
-                    ultimaActualizacion: new Date().toISOString()
-                }, { merge: true });
-                alert("✅ ¡Guardado con éxito!");
-                location.reload(); 
-            } catch (error) {
-                alert("Error al guardar.");
-            }
-        }
-
-        // --- INICIALIZACIÓN ---
+        // 1. Renderizar la página primero
         renderizarEstructura();
 
-        // Al terminar de escribir el nombre (evento blur), cargamos y bloqueamos lo existente
-        document.getElementById('nombreUsuario').addEventListener('blur', bloquearCamposExistentes);
-        
-        document.getElementById('btnGuardar').onclick = guardarQuiniela;
-        document.getElementById('btnConsultaPublica').onclick = consultarPublicoSoloLectura;
+        // 2. Definir funciones globales
+        window.guardarQuiniela = async () => {
+            const nombre = document.getElementById('nombreUsuario').value.trim();
+            if (!nombre) { alert("Escribe tu nombre"); return; }
+            
+            const docRef = doc(db, "predicciones", nombre.toLowerCase());
+            const docSnap = await getDoc(docRef);
+            let prev = docSnap.exists() ? docSnap.data().predicciones : {};
+
+            document.querySelectorAll('.input-goles').forEach(input => {
+                if (input.value !== "" && !input.disabled) prev[input.id] = input.value;
+            });
+
+            await setDoc(docRef, { usuario: nombre, predicciones: prev, ultimaActualizacion: new Date().toISOString() }, { merge: true });
+            alert("✅ Guardado");
+            location.reload();
+        };
+
+        window.bloquearExistente = async () => {
+            const nombre = document.getElementById('nombreUsuario').value.trim().toLowerCase();
+            if (!nombre) return;
+            const docSnap = await getDoc(doc(db, "predicciones", nombre));
+            if (docSnap.exists()) {
+                const data = docSnap.data().predicciones;
+                Object.keys(data).forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) { el.value = data[id]; el.disabled = true; }
+                });
+            }
+        };
+
+        // 3. Asignar eventos
+        document.getElementById('btnGuardar').onclick = window.guardarQuiniela;
+        document.getElementById('nombreUsuario').addEventListener('change', window.bloquearExistente);
     </script>
 </body>
 </html>
