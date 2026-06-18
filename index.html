@@ -196,10 +196,11 @@
         </div>
     </div>
 
-    <script type="module">
+    <<script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+        // ... (TU CONFIGURACIÓN DE FIREBASE SE QUEDA IGUAL) ...
         const firebaseConfig = {
             apiKey: "AIzaSyD_dXyyPTCUFfA_uJs6gxSyaBmbbn2Eh14",
             authDomain: "quiniela-mundial-2026-baf3b.firebaseapp.com",
@@ -209,220 +210,79 @@
             appId: "1:47313550839:web:4341e05d36eab06d79c2f2",
             measurementId: "G-RK1XCFTM37"
         };
-
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        const cronogramaMundial = {
-            'Grupo A': [
-                { jornada: 'Jornada 1', fecha: '11 de Junio', partidos: [{ id: 'A1', local: 'México 🇲🇽', visitante: 'Sudáfrica 🇿🇦' }, { id: 'A2', local: 'Corea del Sur 🇰🇷', visitante: 'Rep. Checa 🇨🇿' }] },
-                { jornada: 'Jornada 2', fecha: '18 de Junio', partidos: [{ id: 'A3', local: 'México 🇲🇽', visitante: 'Corea del Sur 🇰🇷' }, { id: 'A4', local: 'Rep. Checa 🇨🇿', visitante: 'Sudáfrica 🇿🇦' }] },
-                { jornada: 'Jornada 3', fecha: '24 de Junio', partidos: [{ id: 'A5', local: 'Rep. Checa 🇨🇿', visitante: 'México 🇲🇽' }, { id: 'A6', local: 'Sudáfrica 🇿🇦', visitante: 'Corea del Sur 🇰🇷' }] }
-            ],
-            'Grupo B': [
-                { jornada: 'Jornada 1', fecha: '12 de Junio', partidos: [{ id: 'B1', local: 'Canadá 🇨🇦', visitante: 'Bosnia y H. 🇧🇦' }] },
-                { jornada: 'Jornada 1', fecha: '13 de Junio', partidos: [{ id: 'B2', local: 'Catar 🇶🇦', visitante: 'Suiza 🇨🇭' }] },
-                { jornada: 'Jornada 2', fecha: '18 de Junio', partidos: [{ id: 'B3', local: 'Canadá 🇨🇦', visitante: 'Catar 🇶🇦' }, { id: 'B4', local: 'Suiza 🇨🇭', visitante: 'Bosnia y H. 🇧🇦' }] },
-                { jornada: 'Jornada 3', fecha: '24 de Junio', partidos: [{ id: 'B5', local: 'Suiza 🇨🇭', visitante: 'Canadá 🇨🇦' }, { id: 'B6', local: 'Bosnia y H. 🇧🇦', visitante: 'Catar 🇶🇦' }] }
-],            'Grupo C': [
-                { jornada: 'Jornada 1', fecha: '13 de Junio', partidos: [{ id: 'C1', local: 'Brasil 🇧🇷', visitante: 'Marruecos 🇲🇦' }, { id: 'C2', local: 'Haití 🇭🇹', visitante: 'Escocia 🏴󠁧󠁢󠁳󠁣󠁴󠁿' }] },
-                { jornada: 'Jornada 2', fecha: '19 de Junio', partidos: [{ id: 'C3', local: 'Brasil 🇧🇷', visitante: 'Haití 🇭🇹' }, { id: 'C4', local: 'Escocia 🏴󠁧󠁢󠁳󠁣󠁴󠁿', visitante: 'Marruecos 🇲🇦' }] },
-                { jornada: 'Jornada 3', fecha: '24 de Junio', partidos: [{ id: 'C5', local: 'Escocia 🏴󠁧󠁢󠁳󠁣󠁴󠁿', visitante: 'Brasil 🇧🇷' }, { id: 'C6', local: 'Marruecos 🇲🇦', visitante: 'Haití 🇭🇹' }] }
-            ],
-            'Grupo D': [
-                { jornada: 'Jornada 1', fecha: '12 de Junio', partidos: [{ id: 'D1', local: 'Estados Unidos 🇺🇸', visitante: 'Paraguay 🇵🇾'  }] },
-                { jornada: 'Jornada 1', fecha: '14 de Junio', partidos: [{ id: 'D2', local: 'Australia AU', visitante: 'Turquia TR' }] },
-                { jornada: 'Jornada 2', fecha: '19 de Junio', partidos: [{ id: 'D3', local: 'Estados Unidos 🇺🇸', visitante: 'Australia 🇦🇺' }, { id: 'D4', local: 'Turquía 🇹🇷', visitante: 'Paraguay 🇵🇾' }] },
-                { jornada: 'Jornada 3', fecha: '25 de Junio', partidos: [{ id: 'D5', local: 'Turquía 🇹🇷', visitante: 'Estados Unidos 🇺🇸' }, { id: 'D6', local: 'Paraguay 🇵🇾', visitante: 'Australia 🇦🇺' }] }
-            ],
-            'Grupo E': [
-                { jornada: 'Jornada 1', fecha: '14 de Junio', partidos: [{ id: 'E1', local: 'Alemania 🇩🇪', visitante: 'Curazao 🇨🇼' }, { id: 'E2', local: 'Costa de Marfil 🇨🇮', visitante: 'Ecuador 🇪🇨' }] },
-                { jornada: 'Jornada 2', fecha: '20 de Junio', partidos: [{ id: 'E3', local: 'Alemania 🇩🇪', visitante: 'Costa de Marfil 🇨🇮' }, { id: 'E4', local: 'Ecuador 🇪🇨', visitante: 'Curazao 🇨🇼' }] },
-                { jornada: 'Jornada 3', fecha: '25 de Junio', partidos: [{ id: 'E5', local: 'Ecuador 🇪🇨', visitante: 'Alemania 🇩🇪' }, { id: 'E6', local: 'Curazao 🇨🇼', visitante: 'Costa de Marfil 🇨🇮' }] }
-            ],
-            'Grupo F': [
-                { jornada: 'Jornada 1', fecha: '14 de Junio', partidos: [{ id: 'F1', local: 'Países Bajos 🇳🇱', visitante: 'Japón 🇯🇵' }, { id: 'F2', local: 'Suecia 🇸🇪', visitante: 'Túnez 🇹🇳' }] },
-                { jornada: 'Jornada 2', fecha: '20 de Junio', partidos: [{ id: 'F3', local: 'Países Bajos 🇳🇱', visitante: 'Suecia 🇸🇪' }] },
-                { jornada: 'Jornada 2', fecha: '21 de junio', partidos: [{ id: 'F4', local: 'Túnez 🇹🇳', visitante: 'Japón 🇯🇵' }] },
-                { jornada: 'Jornada 3', fecha: '25 de Junio', partidos: [{ id: 'F5', local: 'Túnez 🇹🇳', visitante: 'Países Bajos 🇳🇱' }, { id: 'F6', local: 'Japón 🇯🇵', visitante: 'Suecia 🇸🇪' }] }
-            ],
-            'Grupo G': [
-                { jornada: 'Jornada 1', fecha: '15 de Junio', partidos: [{ id: 'G1', local: 'Bélgica 🇧🇪', visitante: 'Egipto 🇪🇬' }, { id: 'G2', local: 'RI de Irán 🇮🇷', visitante: 'Nueva Zelanda 🇳🇿' }] },
-                { jornada: 'Jornada 2', fecha: '21 de Junio', partidos: [{ id: 'G3', local: 'Bélgica 🇧🇪', visitante: 'RI de Irán 🇮🇷' }, { id: 'G4', local: 'Nueva Zelanda 🇳🇿', visitante: 'Egipto 🇪🇬' }] },
-                { jornada: 'Jornada 3', fecha: '26 de Junio', partidos: [{ id: 'G5', local: 'Nueva Zelanda 🇳🇿', visitante: 'Bélgica 🇧🇪' }, { id: 'G6', local: 'Egipto 🇪🇬', visitante: 'RI de Irán 🇮🇷' }] }
-            ],
-            'Grupo H': [
-                { jornada: 'Jornada 1', fecha: '15 de Junio', partidos: [{ id: 'H1', local: 'España 🇪🇸', visitante: 'Cabo Verde 🇨🇻' }, { id: 'H2', local: 'Arabia Saudí 🇸🇦', visitante: 'Uruguay 🇺🇾' }] },
-                { jornada: 'Jornada 2', fecha: '21 de Junio', partidos: [{ id: 'H3', local: 'España 🇪🇸', visitante: 'Arabia Saudí 🇸🇦' }, { id: 'H4', local: 'Uruguay 🇺🇾', visitante: 'Cabo Verde 🇨🇻' }] },
-                { jornada: 'Jornada 3', fecha: '26 de Junio', partidos: [{ id: 'H5', local: 'Uruguay 🇺🇾', visitante: 'España 🇪🇸' }, { id: 'H6', local: 'Cabo Verde 🇨🇻', visitante: 'Arabia Saudí 🇸🇦' }] }
-            ],
-            'Grupo I': [
-                { jornada: 'Jornada 1', fecha: '16 de Junio', partidos: [{ id: 'I1', local: 'Francia 🇫🇷', visitante: 'Senegal 🇸🇳' }, { id: 'I2', local: 'Irak 🇮🇶', visitante: 'Noruega 🇳🇴' }] },
-                { jornada: 'Jornada 2', fecha: '22 de Junio', partidos: [{ id: 'I3', local: 'Francia 🇫🇷', visitante: 'Irak 🇮🇶' }, { id: 'I4', local: 'Noruega 🇳🇴', visitante: 'Senegal 🇸🇳' }] },
-                { jornada: 'Jornada 3', fecha: '26 de Junio', partidos: [{ id: 'I5', local: 'Noruega 🇳🇴', visitante: 'Francia 🇫🇷' }, { id: 'I6', local: 'Senegal 🇸🇳', visitante: 'Irak 🇮🇶' }] }
-            ],
-            'Grupo J': [
-                { jornada: 'Jornada 1', fecha: '16 de Junio', partidos: [{ id: 'J1', local: 'Argentina 🇦🇷', visitante: 'Argelia 🇩🇿' }] },
-                { jornada: 'Jornada 1', fecha: '17 de Junio', partidos: [{ id: 'J2', local: 'Austria 🇦🇹', visitante: 'Jordania 🇯🇴' }] },
-                { jornada: 'Jornada 2', fecha: '22 de Junio', partidos: [{ id: 'J3', local: 'Argentina 🇦🇷', visitante: 'Austria 🇦🇹' }, { id: 'J4', local: 'Jordania 🇯🇴', visitante: 'Argelia 🇩🇿' }] },
-                { jornada: 'Jornada 3', fecha: '27 de Junio', partidos: [{ id: 'J5', local: 'Jordania 🇯🇴', visitante: 'Argentina 🇦🇷' }, { id: 'J6', local: 'Argelia 🇩🇿', visitante: 'Austria 🇦🇹' }] }
-            ],
-            'Grupo K': [
-                { jornada: 'Jornada 1', fecha: '17 de Junio', partidos: [{ id: 'K1', local: 'Uzbekistán 🇺🇿', visitante: 'Colombia 🇨🇴' }, { id: 'K2', local: 'Portugal 🇵🇹', visitante: 'RD Congo 🇨🇩' }] },
-                { jornada: 'Jornada 2', fecha: '23 de Junio', partidos: [{ id: 'K3', local: 'Uzbekistán 🇺🇿', visitante: 'Portugal 🇵🇹' }, { id: 'K4', local: 'RD Congo 🇨🇩', visitante: 'Colombia 🇨🇴' }] },
-                { jornada: 'Jornada 3', fecha: '27 de Junio', partidos: [{ id: 'K5', local: 'RD Congo 🇨🇩', visitante: 'Uzbekistán 🇺🇿' }, { id: 'K6', local: 'Colombia 🇨🇴', visitante: 'Portugal 🇵🇹' }] }
-            ],
-            'Grupo L': [
-                { jornada: 'Jornada 1', fecha: '17 de Junio', partidos: [{ id: 'L1', local: 'Inglaterra 🏴󠁧󠁢󠁥󠁮󠁧󠁿', visitante: 'Croacia 🇭🇷' }, { id: 'L2', local: 'Ghana 🇬🇭', visitante: 'Panamá 🇵🇦' }] },
-                { jornada: 'Jornada 2', fecha: '23 de Junio', partidos: [{ id: 'L3', local: 'Inglaterra 🏴󠁧󠁢󠁥󠁮󠁧󠁿', visitante: 'Ghana 🇬🇭' }, { id: 'L4', local: 'Panamá 🇵🇦', visitante: 'Croacia 🇭🇷' }] },
-                { jornada: 'Jornada 3', fecha: '27 de Junio', partidos: [{ id: 'L5', local: 'Panamá 🇵🇦', visitante: 'Inglaterra 🏴󠁧󠁢󠁥󠁮󠁧󠁿' }, { id: 'L6', local: 'Croacia 🇭🇷', visitante: 'Ghana 🇬🇭' }] }
-            ]
-        };
+        // ... (MANTÉN TU OBJETO cronogramaMundial Y LA FUNCIÓN renderizarEstructura) ...
+        // [AQUÍ VA TU CÓDIGO ACTUAL DE CRONOGRAMA Y RENDERIZADO]
 
-        function renderizarEstructura() {
-            const container = document.getElementById('gruposContainer');
-            container.innerHTML = '';
-
-            Object.keys(cronogramaMundial).forEach(nombreGrupo => {
-                const card = document.createElement('div');
-                card.className = 'grupo-card';
-                
-                let htmlContenido = `<div class="grupo-titulo">${nombreGrupo}</div>`;
-                
-                cronogramaMundial[nombreGrupo].forEach(bloqueJornada => {
-                    htmlContenido += `
-                        <div class="jornada-seccion">
-                            <div class="jornada-titulo">
-                                <span>📅 ${bloqueJornada.jornada}</span>
-                                <span class="jornada-fecha">${bloqueJornada.fecha}</span>
-                            </div>
-                    `;
-                    
-                    bloqueJornada.partidos.forEach(partido => {
-                        htmlContenido += `
-                            <div class="partido">
-                                <div class="bloque-equipo local">
-                                    <span class="nombre-equipo">${partido.local}</span>
-                                    <input type="number" id="home-${partido.id}" class="input-goles" min="0" placeholder="-">
-                                </div>
-                                <span class="vs">vs</span>
-                                <div class="bloque-equipo visitante">
-                                    <input type="number" id="away-${partido.id}" class="input-goles" min="0" placeholder="-">
-                                    <span class="nombre-equipo">${partido.visitante}</span>
-                                </div>
-                            </div>
-                        `;
-                    });
-
-                    htmlContenido += `</div>`;
-                });
-                
-                card.innerHTML = htmlContenido;
-                container.appendChild(card);
-            });
-        }
-
-        async function consultarPublicoSoloLectura() {
-            const nombreConsulta = document.getElementById('nombreConsultaPublica').value.trim();
-            if (!nombreConsulta) {
-                alert("❌ Por favor, ingresa el nombre del participante que deseas revisar.");
-                return;
-            }
-
-            const idNormalizado = nombreConsulta.toLowerCase();
+        async function bloquearCamposExistentes() {
+            const nombre = document.getElementById('nombreUsuario').value.trim().toLowerCase();
+            if (!nombre) return;
 
             try {
-                const docRef = doc(db, "predicciones", idNormalizado);
-                const docSnap = await getDoc(docRef);
-
+                const docSnap = await getDoc(doc(db, "predicciones", nombre));
                 if (docSnap.exists()) {
                     const data = docSnap.data().predicciones || {};
-                    
-                    document.querySelectorAll('.input-goles').forEach(input => input.value = "");
-
                     Object.keys(data).forEach(key => {
-                        const inputElement = document.getElementById(key);
-                        if (inputElement) {
-                            inputElement.value = data[key];
+                        const input = document.getElementById(key);
+                        if (input) {
+                            input.value = data[key];
+                            input.disabled = true; // Bloquea el campo ya guardado
                         }
                     });
-
-                    document.querySelectorAll('.input-goles').forEach(input => input.disabled = true);
-                    document.getElementById('btnGuardar').disabled = true;
-
-                    alert(`👁️ Viendo la quiniela de: "${docSnap.data().usuario || nombreConsulta}" en modo SOLO LECTURA. No se permiten modificaciones.`);
-                } else {
-                    alert(`🤷‍♂️ No se encontró ninguna quiniela registrada bajo el nombre "${nombreConsulta}".`);
                 }
-            } catch (error) {
-                console.error(error);
-                alert("Error al consultar el perfil solicitado.");
+            } catch (e) {
+                console.error("Error al bloquear campos:", e);
             }
         }
 
         async function guardarQuiniela() {
             const nombreOriginal = document.getElementById('nombreUsuario').value.trim();
             if (!nombreOriginal) {
-                alert("❌ Por favor, escribe tu nombre antes de guardar.");
+                alert("❌ Por favor, escribe tu nombre.");
                 return;
             }
 
             const userIdNormalizado = nombreOriginal.toLowerCase();
-            const mapaPredicciones = {};
-            let tieneDatos = false;
+            const docRef = doc(db, "predicciones", userIdNormalizado);
+            const docSnap = await getDoc(docRef);
+            let prediccionesExistentes = docSnap.exists() ? docSnap.data().predicciones : {};
 
-            Object.values(cronogramaMundial).forEach(grupo => {
-                grupo.forEach(bloque => {
-                    bloque.partidos.forEach(partido => {
-                        const homeVal = document.getElementById(`home-${partido.id}`).value;
-                        const awayVal = document.getElementById(`away-${partido.id}`).value;
-                        if (homeVal !== "") { mapaPredicciones[`home-${partido.id}`] = homeVal.toString(); tieneDatos = true; }
-                        if (awayVal !== "") { mapaPredicciones[`away-${partido.id}`] = awayVal.toString(); tieneDatos = true; }
-                    });
-                });
+            let guardado = false;
+            document.querySelectorAll('.input-goles').forEach(input => {
+                if (input.value !== "" && !input.disabled) {
+                    prediccionesExistentes[input.id] = input.value.toString();
+                    guardado = true;
+                }
             });
 
-            if (!tieneDatos) {
-                alert("❌ No has ingresado ningún marcador todavía.");
+            if (!guardado) {
+                alert("No hay nuevos marcadores para guardar.");
                 return;
             }
 
             try {
-                const docRef = doc(db, "predicciones", userIdNormalizado);
-                const docSnap = await getDoc(docRef);
-
-                if (docSnap.exists()) {
-                    alert(`⚠️ ¡ERROR DE SEGURIDAD! El participante "${userIdNormalizado}" ya está registrado y su quiniela está congelada.\n\nNo puedes volver a guardar bajo este nombre.`);
-                    return;
-                }
-
                 await setDoc(docRef, {
-                    usuario: nombreOriginal, 
-                    predicciones: mapaPredicciones,
+                    usuario: nombreOriginal,
+                    predicciones: prediccionesExistentes,
                     ultimaActualizacion: new Date().toISOString()
-                });
-
-                document.querySelectorAll('.input-goles').forEach(input => input.disabled = true);
-                document.getElementById('btnGuardar').disabled = true;
-
-                alert(`💪 ¡Tu quiniela ha sido guardada con éxito y ha quedado CONGELADA! Ya no se puede modificar.`);
+                }, { merge: true });
+                alert("✅ ¡Guardado con éxito!");
+                location.reload(); 
             } catch (error) {
-                console.error(error);
-                alert("Error de conexión: No se pudieron sincronizar los marcadores.");
+                alert("Error al guardar.");
             }
         }
 
-        document.getElementById('nombreUsuario').addEventListener('input', () => {
-            if (document.getElementById('btnGuardar').disabled && !document.getElementById('nombreConsultaPublica').value) {
-                document.querySelectorAll('.input-goles').forEach(input => input.disabled = false);
-                document.getElementById('btnGuardar').disabled = false;
-            }
-        });
+        // --- INICIALIZACIÓN ---
+        renderizarEstructura();
 
+        // Al terminar de escribir el nombre (evento blur), cargamos y bloqueamos lo existente
+        document.getElementById('nombreUsuario').addEventListener('blur', bloquearCamposExistentes);
+        
         document.getElementById('btnGuardar').onclick = guardarQuiniela;
         document.getElementById('btnConsultaPublica').onclick = consultarPublicoSoloLectura;
-
-        renderizarEstructura();
     </script>
 </body>
 </html>
