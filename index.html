@@ -1,4 +1,202 @@
-<script type="module">
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiniela Mundial 2026 - Fase de Grupos</title>
+    <style>
+        :root {
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --primary-green: #0a5c36;
+            --accent-gold: #ffca28;
+            --text-main: #ffffff;
+            --text-muted: #aaaaaa;
+            --border-color: #333333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 650px;
+            margin-bottom: 25px;
+        }
+
+        .header-card {
+            background-color: var(--primary-green);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .header-card h1 { margin: 0 0 10px 0; font-size: 1.6rem; }
+        .header-card p { margin: 0; color: #e0e0e0; font-size: 0.95rem; }
+
+        .usuario-box {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .grupo-grid { display: flex; flex-direction: column; gap: 25px; }
+
+        .grupo-card {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .grupo-titulo {
+            font-size: 1.3rem;
+            color: var(--accent-gold);
+            margin-bottom: 15px;
+            font-weight: bold;
+            border-bottom: 2px solid var(--primary-green);
+            padding-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .jornada-seccion {
+            margin-top: 15px;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #2a2a2a;
+        }
+
+        .jornada-titulo {
+            font-size: 0.9rem;
+            color: var(--accent-gold);
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .jornada-fecha {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: normal;
+        }
+
+        .partido {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 5px 0;
+        }
+
+        .partido:last-child { margin-bottom: 0; }
+
+        .bloque-equipo { flex: 1; display: flex; align-items: center; gap: 8px; }
+        .bloque-equipo.local { justify-content: flex-end; text-align: right; }
+        .bloque-equipo.visitante { justify-content: flex-start; text-align: left; }
+
+        .nombre-equipo { font-size: 0.95rem; }
+
+        .input-goles {
+            width: 45px;
+            padding: 8px;
+            background-color: #2a2a2a;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: white;
+            text-align: center;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        .input-goles:disabled {
+            background-color: #1a1a1a;
+            color: #888888;
+            border: 1px dashed #444444;
+            cursor: not-allowed;
+        }
+
+        .vs { font-size: 0.8rem; color: var(--text-muted); font-weight: bold; padding: 0 10px; }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover { background-color: #388e3c; }
+        button:disabled { background-color: #2e4d32; color: #888888; cursor: not-allowed; box-shadow: none !important; }
+        
+        .btn-publico { background-color: #d84315; padding: 10px; font-size: 0.9rem; }
+        .btn-publico:hover { background-color: #ff5722; }
+
+        .nav-links { display: flex; justify-content: space-between; margin-top: 25px; width: 100%; }
+        .nav-links a { color: #4caf50; text-decoration: none; font-size: 0.95rem; font-weight: 500; }
+        .nav-links a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header-card">
+            <h1>⚽ Quiniela Mundial 2026</h1>
+            <p>Calendario Oficial por Jornadas con Bloqueo de Modificación y Consulta de Lectura Pública.</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="usuario-box">
+            <div>
+                <label style="display:block; font-size:0.85rem; color:var(--text-muted); margin-bottom:5px; font-weight:bold;">TU NOMBRE DE PARTICIPANTE (Registrar):</label>
+                <input type="text" id="nombreUsuario" placeholder="Escribe tu nombre (Ej. Juan Perez)" style="width:100%; padding:12px; background-color:#2a2a2a; border:1px solid var(--border-color); border-radius:8px; color:white; font-size:1rem; box-sizing:border-box;">
+            </div>
+            
+            <div style="border-top: 1px solid var(--border-color); padding-top: 12px; margin-top: 4px;">
+                <label style="display:block; font-size:0.85rem; color:var(--accent-gold); margin-bottom:5px; font-weight:bold;">COMPROBAR QUINIELA DE OTRO PARTICIPANTE (Solo Lectura):</label>
+                <input type="text" id="nombreConsultaPublica" placeholder="Escribe el nombre de tu amigo..." style="width:100%; padding:12px; background-color:#2a2a2a; border:1px solid var(--border-color); border-radius:8px; color:white; font-size:1rem; box-sizing:border-box;">
+                <button type="button" id="btnConsultaPublica" class="btn-publico" style="margin-top: 8px;">👁️ Ver Predicciones de otro Participante</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <form id="quinielaForm">
+            <div id="gruposContainer" class="grupo-grid"></div>
+            <button type="button" id="btnGuardar" style="position: sticky; bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); z-index: 100; margin-top: 20px;">Guardar Mis Pronósticos</button>
+        </form>
+
+        <div class="nav-links">
+            <a href="posiciones.html" style="font-weight: bold; color: var(--accent-gold);">📊 Ver Tabla de Posiciones Global →</a>
+            <a href="eliminatoria.html">Segunda Fase (Eliminatorias) 🏆</a>
+        </div>
+    </div>
+
+    <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
@@ -8,84 +206,214 @@
             projectId: "quiniela-mundial-2026-baf3b",
             storageBucket: "quiniela-mundial-2026-baf3b.firebasestorage.app",
             messagingSenderId: "47313550839",
-            appId: "1:47313550839:web:4341e05d36eab06d79c2f2"
+            appId: "1:47313550839:web:4341e05d36eab06d79c2f2",
+            measurementId: "G-RK1XCFTM37"
         };
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // AQUÍ DEFINES TUS JORNADAS
-        const cronograma = {
-            "Jornada 1": [
-                { id: "A1", local: "Equipo A", visita: "Equipo B" },
-                { id: "A2", local: "Equipo C", visita: "Equipo D" }
+        const cronogramaMundial = {
+            'Grupo A': [
+                { jornada: 'Jornada 1', fecha: '11 de Junio', partidos: [{ id: 'A1', local: 'México 🇲🇽', visitante: 'Sudáfrica 🇿🇦' }, { id: 'A2', local: 'Corea del Sur 🇰🇷', visitante: 'Rep. Checa 🇨🇿' }] },
+                { jornada: 'Jornada 2', fecha: '18 de Junio', partidos: [{ id: 'A3', local: 'México 🇲🇽', visitante: 'Corea del Sur 🇰🇷' }, { id: 'A4', local: 'Rep. Checa 🇨🇿', visitante: 'Sudáfrica 🇿🇦' }] },
+                { jornada: 'Jornada 3', fecha: '24 de Junio', partidos: [{ id: 'A5', local: 'Rep. Checa 🇨🇿', visitante: 'México 🇲🇽' }, { id: 'A6', local: 'Sudáfrica 🇿🇦', visitante: 'Corea del Sur 🇰🇷' }] }
             ],
-            "Jornada 2": [
-                { id: "B1", local: "Equipo E", visita: "Equipo F" },
-                { id: "B2", local: "Equipo G", visita: "Equipo H" }
+            'Grupo B': [
+                { jornada: 'Jornada 1', fecha: '12 de Junio', partidos: [{ id: 'B1', local: 'Canadá 🇨🇦', visitante: 'Bosnia y H. 🇧🇦' }] },
+                { jornada: 'Jornada 1', fecha: '13 de Junio', partidos: [{ id: 'B2', local: 'Catar 🇶🇦', visitante: 'Suiza 🇨🇭' }] },
+                { jornada: 'Jornada 2', fecha: '18 de Junio', partidos: [{ id: 'B3', local: 'Canadá 🇨🇦', visitante: 'Catar 🇶🇦' }, { id: 'B4', local: 'Suiza 🇨🇭', visitante: 'Bosnia y H. 🇧🇦' }] },
+                { jornada: 'Jornada 3', fecha: '24 de Junio', partidos: [{ id: 'B5', local: 'Suiza 🇨🇭', visitante: 'Canadá 🇨🇦' }, { id: 'B6', local: 'Bosnia y H. 🇧🇦', visitante: 'Catar 🇶🇦' }] }
+],            'Grupo C': [
+                { jornada: 'Jornada 1', fecha: '13 de Junio', partidos: [{ id: 'C1', local: 'Brasil 🇧🇷', visitante: 'Marruecos 🇲🇦' }, { id: 'C2', local: 'Haití 🇭🇹', visitante: 'Escocia 🏴󠁧󠁢󠁳󠁣󠁴󠁿' }] },
+                { jornada: 'Jornada 2', fecha: '19 de Junio', partidos: [{ id: 'C3', local: 'Brasil 🇧🇷', visitante: 'Haití 🇭🇹' }, { id: 'C4', local: 'Escocia 🏴󠁧󠁢󠁳󠁣󠁴󠁿', visitante: 'Marruecos 🇲🇦' }] },
+                { jornada: 'Jornada 3', fecha: '24 de Junio', partidos: [{ id: 'C5', local: 'Escocia 🏴󠁧󠁢󠁳󠁣󠁴󠁿', visitante: 'Brasil 🇧🇷' }, { id: 'C6', local: 'Marruecos 🇲🇦', visitante: 'Haití 🇭🇹' }] }
+            ],
+            'Grupo D': [
+                { jornada: 'Jornada 1', fecha: '12 de Junio', partidos: [{ id: 'D1', local: 'Estados Unidos 🇺🇸', visitante: 'Paraguay 🇵🇾'  }] },
+                { jornada: 'Jornada 1', fecha: '14 de Junio', partidos: [{ id: 'D2', local: 'Australia AU', visitante: 'Turquia TR' }] },
+                { jornada: 'Jornada 2', fecha: '19 de Junio', partidos: [{ id: 'D3', local: 'Estados Unidos 🇺🇸', visitante: 'Australia 🇦🇺' }, { id: 'D4', local: 'Turquía 🇹🇷', visitante: 'Paraguay 🇵🇾' }] },
+                { jornada: 'Jornada 3', fecha: '25 de Junio', partidos: [{ id: 'D5', local: 'Turquía 🇹🇷', visitante: 'Estados Unidos 🇺🇸' }, { id: 'D6', local: 'Paraguay 🇵🇾', visitante: 'Australia 🇦🇺' }] }
+            ],
+            'Grupo E': [
+                { jornada: 'Jornada 1', fecha: '14 de Junio', partidos: [{ id: 'E1', local: 'Alemania 🇩🇪', visitante: 'Curazao 🇨🇼' }, { id: 'E2', local: 'Costa de Marfil 🇨🇮', visitante: 'Ecuador 🇪🇨' }] },
+                { jornada: 'Jornada 2', fecha: '20 de Junio', partidos: [{ id: 'E3', local: 'Alemania 🇩🇪', visitante: 'Costa de Marfil 🇨🇮' }, { id: 'E4', local: 'Ecuador 🇪🇨', visitante: 'Curazao 🇨🇼' }] },
+                { jornada: 'Jornada 3', fecha: '25 de Junio', partidos: [{ id: 'E5', local: 'Ecuador 🇪🇨', visitante: 'Alemania 🇩🇪' }, { id: 'E6', local: 'Curazao 🇨🇼', visitante: 'Costa de Marfil 🇨🇮' }] }
+            ],
+            'Grupo F': [
+                { jornada: 'Jornada 1', fecha: '14 de Junio', partidos: [{ id: 'F1', local: 'Países Bajos 🇳🇱', visitante: 'Japón 🇯🇵' }, { id: 'F2', local: 'Suecia 🇸🇪', visitante: 'Túnez 🇹🇳' }] },
+                { jornada: 'Jornada 2', fecha: '20 de Junio', partidos: [{ id: 'F3', local: 'Países Bajos 🇳🇱', visitante: 'Suecia 🇸🇪' }] },
+                { jornada: 'Jornada 2', fecha: '21 de junio', partidos: [{ id: 'F4', local: 'Túnez 🇹🇳', visitante: 'Japón 🇯🇵' }] },
+                { jornada: 'Jornada 3', fecha: '25 de Junio', partidos: [{ id: 'F5', local: 'Túnez 🇹🇳', visitante: 'Países Bajos 🇳🇱' }, { id: 'F6', local: 'Japón 🇯🇵', visitante: 'Suecia 🇸🇪' }] }
+            ],
+            'Grupo G': [
+                { jornada: 'Jornada 1', fecha: '15 de Junio', partidos: [{ id: 'G1', local: 'Bélgica 🇧🇪', visitante: 'Egipto 🇪🇬' }, { id: 'G2', local: 'RI de Irán 🇮🇷', visitante: 'Nueva Zelanda 🇳🇿' }] },
+                { jornada: 'Jornada 2', fecha: '21 de Junio', partidos: [{ id: 'G3', local: 'Bélgica 🇧🇪', visitante: 'RI de Irán 🇮🇷' }, { id: 'G4', local: 'Nueva Zelanda 🇳🇿', visitante: 'Egipto 🇪🇬' }] },
+                { jornada: 'Jornada 3', fecha: '26 de Junio', partidos: [{ id: 'G5', local: 'Nueva Zelanda 🇳🇿', visitante: 'Bélgica 🇧🇪' }, { id: 'G6', local: 'Egipto 🇪🇬', visitante: 'RI de Irán 🇮🇷' }] }
+            ],
+            'Grupo H': [
+                { jornada: 'Jornada 1', fecha: '15 de Junio', partidos: [{ id: 'H1', local: 'España 🇪🇸', visitante: 'Cabo Verde 🇨🇻' }, { id: 'H2', local: 'Arabia Saudí 🇸🇦', visitante: 'Uruguay 🇺🇾' }] },
+                { jornada: 'Jornada 2', fecha: '21 de Junio', partidos: [{ id: 'H3', local: 'España 🇪🇸', visitante: 'Arabia Saudí 🇸🇦' }, { id: 'H4', local: 'Uruguay 🇺🇾', visitante: 'Cabo Verde 🇨🇻' }] },
+                { jornada: 'Jornada 3', fecha: '26 de Junio', partidos: [{ id: 'H5', local: 'Uruguay 🇺🇾', visitante: 'España 🇪🇸' }, { id: 'H6', local: 'Cabo Verde 🇨🇻', visitante: 'Arabia Saudí 🇸🇦' }] }
+            ],
+            'Grupo I': [
+                { jornada: 'Jornada 1', fecha: '16 de Junio', partidos: [{ id: 'I1', local: 'Francia 🇫🇷', visitante: 'Senegal 🇸🇳' }, { id: 'I2', local: 'Irak 🇮🇶', visitante: 'Noruega 🇳🇴' }] },
+                { jornada: 'Jornada 2', fecha: '22 de Junio', partidos: [{ id: 'I3', local: 'Francia 🇫🇷', visitante: 'Irak 🇮🇶' }, { id: 'I4', local: 'Noruega 🇳🇴', visitante: 'Senegal 🇸🇳' }] },
+                { jornada: 'Jornada 3', fecha: '26 de Junio', partidos: [{ id: 'I5', local: 'Noruega 🇳🇴', visitante: 'Francia 🇫🇷' }, { id: 'I6', local: 'Senegal 🇸🇳', visitante: 'Irak 🇮🇶' }] }
+            ],
+            'Grupo J': [
+                { jornada: 'Jornada 1', fecha: '16 de Junio', partidos: [{ id: 'J1', local: 'Argentina 🇦🇷', visitante: 'Argelia 🇩🇿' }] },
+                { jornada: 'Jornada 1', fecha: '17 de Junio', partidos: [{ id: 'J2', local: 'Austria 🇦🇹', visitante: 'Jordania 🇯🇴' }] },
+                { jornada: 'Jornada 2', fecha: '22 de Junio', partidos: [{ id: 'J3', local: 'Argentina 🇦🇷', visitante: 'Austria 🇦🇹' }, { id: 'J4', local: 'Jordania 🇯🇴', visitante: 'Argelia 🇩🇿' }] },
+                { jornada: 'Jornada 3', fecha: '27 de Junio', partidos: [{ id: 'J5', local: 'Jordania 🇯🇴', visitante: 'Argentina 🇦🇷' }, { id: 'J6', local: 'Argelia 🇩🇿', visitante: 'Austria 🇦🇹' }] }
+            ],
+            'Grupo K': [
+                { jornada: 'Jornada 1', fecha: '17 de Junio', partidos: [{ id: 'K1', local: 'Uzbekistán 🇺🇿', visitante: 'Colombia 🇨🇴' }, { id: 'K2', local: 'Portugal 🇵🇹', visitante: 'RD Congo 🇨🇩' }] },
+                { jornada: 'Jornada 2', fecha: '23 de Junio', partidos: [{ id: 'K3', local: 'Uzbekistán 🇺🇿', visitante: 'Portugal 🇵🇹' }, { id: 'K4', local: 'RD Congo 🇨🇩', visitante: 'Colombia 🇨🇴' }] },
+                { jornada: 'Jornada 3', fecha: '27 de Junio', partidos: [{ id: 'K5', local: 'RD Congo 🇨🇩', visitante: 'Uzbekistán 🇺🇿' }, { id: 'K6', local: 'Colombia 🇨🇴', visitante: 'Portugal 🇵🇹' }] }
+            ],
+            'Grupo L': [
+                { jornada: 'Jornada 1', fecha: '17 de Junio', partidos: [{ id: 'L1', local: 'Inglaterra 🏴󠁧󠁢󠁥󠁮󠁧󠁿', visitante: 'Croacia 🇭🇷' }, { id: 'L2', local: 'Ghana 🇬🇭', visitante: 'Panamá 🇵🇦' }] },
+                { jornada: 'Jornada 2', fecha: '23 de Junio', partidos: [{ id: 'L3', local: 'Inglaterra 🏴󠁧󠁢󠁥󠁮󠁧󠁿', visitante: 'Ghana 🇬🇭' }, { id: 'L4', local: 'Panamá 🇵🇦', visitante: 'Croacia 🇭🇷' }] },
+                { jornada: 'Jornada 3', fecha: '27 de Junio', partidos: [{ id: 'L5', local: 'Panamá 🇵🇦', visitante: 'Inglaterra 🏴󠁧󠁢󠁥󠁮󠁧󠁿' }, { id: 'L6', local: 'Croacia 🇭🇷', visitante: 'Ghana 🇬🇭' }] }
             ]
         };
 
-        async function renderizarEstructura() {
+        function renderizarEstructura() {
             const container = document.getElementById('gruposContainer');
-            container.innerHTML = "";
-            
-            Object.entries(cronograma).forEach(([nombreJornada, partidos]) => {
-                let html = `<div class="grupo-card">
-                    <div class="grupo-titulo">${nombreJornada}</div>`;
+            container.innerHTML = '';
+
+            Object.keys(cronogramaMundial).forEach(nombreGrupo => {
+                const card = document.createElement('div');
+                card.className = 'grupo-card';
                 
-                partidos.forEach(p => {
-                    html += `<div class="partido">
-                        <div class="bloque-equipo local">${p.local}</div>
-                        <input type="number" id="${p.id}_L" class="input-goles" placeholder="-">
-                        <span class="vs">VS</span>
-                        <input type="number" id="${p.id}_V" class="input-goles" placeholder="-">
-                        <div class="bloque-equipo visitante">${p.visita}</div>
-                    </div>`;
+                let htmlContenido = `<div class="grupo-titulo">${nombreGrupo}</div>`;
+                
+                cronogramaMundial[nombreGrupo].forEach(bloqueJornada => {
+                    htmlContenido += `
+                        <div class="jornada-seccion">
+                            <div class="jornada-titulo">
+                                <span>📅 ${bloqueJornada.jornada}</span>
+                                <span class="jornada-fecha">${bloqueJornada.fecha}</span>
+                            </div>
+                    `;
+                    
+                    bloqueJornada.partidos.forEach(partido => {
+                        htmlContenido += `
+                            <div class="partido">
+                                <div class="bloque-equipo local">
+                                    <span class="nombre-equipo">${partido.local}</span>
+                                    <input type="number" id="home-${partido.id}" class="input-goles" min="0" placeholder="-">
+                                </div>
+                                <span class="vs">vs</span>
+                                <div class="bloque-equipo visitante">
+                                    <input type="number" id="away-${partido.id}" class="input-goles" min="0" placeholder="-">
+                                    <span class="nombre-equipo">${partido.visitante}</span>
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    htmlContenido += `</div>`;
                 });
-                html += `</div>`;
-                container.innerHTML += html;
+                
+                card.innerHTML = htmlContenido;
+                container.appendChild(card);
             });
-        }
-
-        async function guardarQuiniela() {
-            const nombre = document.getElementById('nombreUsuario').value.trim().toLowerCase();
-            if (!nombre) { alert("Escribe tu nombre"); return; }
-            
-            const predicciones = {};
-            document.querySelectorAll('.input-goles').forEach(input => {
-                if (input.value !== "") predicciones[input.id] = input.value;
-            });
-
-            await setDoc(doc(db, "predicciones", nombre), { 
-                usuario: nombre, 
-                predicciones: predicciones,
-                fecha: new Date().toISOString() 
-            }, { merge: true });
-            
-            alert("✅ Guardado con éxito");
         }
 
         async function consultarPublicoSoloLectura() {
-            const nombre = document.getElementById('nombreConsultaPublica').value.trim().toLowerCase();
-            if (!nombre) return;
-            
-            const docSnap = await getDoc(doc(db, "predicciones", nombre));
-            if (docSnap.exists()) {
-                const data = docSnap.data().predicciones;
-                Object.keys(data).forEach(id => {
-                    const el = document.getElementById(id);
-                    if (el) { el.value = data[id]; el.disabled = true; }
-                });
-                alert("Predicciones cargadas en modo lectura.");
-            } else {
-                alert("Usuario no encontrado.");
+            const nombreConsulta = document.getElementById('nombreConsultaPublica').value.trim();
+            if (!nombreConsulta) {
+                alert("❌ Por favor, ingresa el nombre del participante que deseas revisar.");
+                return;
+            }
+
+            const idNormalizado = nombreConsulta.toLowerCase();
+
+            try {
+                const docRef = doc(db, "predicciones", idNormalizado);
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    const data = docSnap.data().predicciones || {};
+                    
+                    document.querySelectorAll('.input-goles').forEach(input => input.value = "");
+
+                    Object.keys(data).forEach(key => {
+                        const inputElement = document.getElementById(key);
+                        if (inputElement) {
+                            inputElement.value = data[key];
+                        }
+                    });
+
+                    document.querySelectorAll('.input-goles').forEach(input => input.disabled = true);
+                    document.getElementById('btnGuardar').disabled = true;
+
+                    alert(`👁️ Viendo la quiniela de: "${docSnap.data().usuario || nombreConsulta}" en modo SOLO LECTURA. No se permiten modificaciones.`);
+                } else {
+                    alert(`🤷‍♂️ No se encontró ninguna quiniela registrada bajo el nombre "${nombreConsulta}".`);
+                }
+            } catch (error) {
+                console.error(error);
+                alert("Error al consultar el perfil solicitado.");
             }
         }
 
-        document.addEventListener("DOMContentLoaded", () => {
-            renderizarEstructura();
-            document.getElementById('btnGuardar').addEventListener('click', guardarQuiniela);
-            document.getElementById('btnConsultaPublica').addEventListener('click', consultarPublicoSoloLectura);
+       async function guardarQuiniela() {
+    const nombreOriginal = document.getElementById('nombreUsuario').value.trim();
+    if (!nombreOriginal) {
+        alert("❌ Por favor, escribe tu nombre antes de guardar.");
+        return;
+    }
+
+    const userIdNormalizado = nombreOriginal.toLowerCase();
+    
+    // Obtener los datos actuales del documento si existen para fusionarlos
+    const docRef = doc(db, "predicciones", userIdNormalizado);
+    const docSnap = await getDoc(docRef);
+    let prediccionesExistentes = docSnap.exists() ? docSnap.data().predicciones : {};
+
+    // Recolectar nuevos valores
+    let nuevosDatos = false;
+    document.querySelectorAll('.input-goles').forEach(input => {
+        if (input.value !== "" && !input.disabled) { // Solo toma los que no estaban bloqueados
+            prediccionesExistentes[input.id] = input.value.toString();
+            nuevosDatos = true;
+        }
+    });
+
+    if (!nuevosDatos) {
+        alert("❌ No has ingresado nuevos marcadores para guardar.");
+        return;
+    }
+
+    try {
+        await setDoc(docRef, {
+            usuario: nombreOriginal,
+            predicciones: prediccionesExistentes,
+            ultimaActualizacion: new Date().toISOString()
+        }, { merge: true });
+
+        alert("✅ ¡Predicciones guardadas correctamente!");
+        location.reload(); 
+    } catch (error) {
+        console.error(error);
+        alert("Error de conexión al guardar.");
+    }
+}
+
+        document.getElementById('nombreUsuario').addEventListener('input', () => {
+            if (document.getElementById('btnGuardar').disabled && !document.getElementById('nombreConsultaPublica').value) {
+                document.querySelectorAll('.input-goles').forEach(input => input.disabled = false);
+                document.getElementById('btnGuardar').disabled = false;
+            }
         });
+
+        document.getElementById('btnGuardar').onclick = guardarQuiniela;
+        document.getElementById('btnConsultaPublica').onclick = consultarPublicoSoloLectura;
+
+        renderizarEstructura();
     </script>
+</body>
+</html>
