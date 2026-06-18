@@ -300,8 +300,8 @@
                     
                     bloqueJornada.partidos.forEach(partido => {
                         htmlContenido += `
-                            <div class="partido">
-                                <div class="bloque-equipo local">
+                           <div class="partido" data-jornada="${bloqueJornada.jornada}">
+                            <div class="bloque-equipo local">
                                     <span class="nombre-equipo">${partido.local}</span>
                                     <input type="number" id="home-${partido.id}" class="input-goles" min="0" placeholder="-">
                                 </div>
@@ -359,7 +359,30 @@
                 alert("Error al consultar el perfil solicitado.");
             }
         }
+function aplicarBloqueos() {
+    // Buscamos todos los partidos
+    document.querySelectorAll('.partido').forEach(partidoDiv => {
+        const jornada = partidoDiv.getAttribute('data-jornada');
+        
+        // Si es Jornada 1, bloqueamos sus inputs
+        if (jornada === 'Jornada 1') {
+            partidoDiv.querySelectorAll('input').forEach(input => {
+                input.disabled = true;
+            });
+        }
+    });
+}
 
+function aplicarBloqueos() {
+    document.querySelectorAll('.partido').forEach(partidoDiv => {
+        const jornada = partidoDiv.getAttribute('data-jornada');
+        if (jornada === 'Jornada 1') {
+            partidoDiv.querySelectorAll('input').forEach(input => {
+                input.disabled = true;
+            });
+        }
+    });
+}
        async function guardarQuiniela() {
     const nombreOriginal = document.getElementById('nombreUsuario').value.trim();
     if (!nombreOriginal) {
@@ -402,13 +425,30 @@
         alert("Error de conexión al guardar.");
     }
 }
+document.getElementById('nombreUsuario').addEventListener('change', async (e) => {
+    const nombre = e.target.value.trim();
+    if (!nombre) return;
 
-        document.getElementById('nombreUsuario').addEventListener('input', () => {
-            if (document.getElementById('btnGuardar').disabled && !document.getElementById('nombreConsultaPublica').value) {
-                document.querySelectorAll('.input-goles').forEach(input => input.disabled = false);
-                document.getElementById('btnGuardar').disabled = false;
-            }
+    // 1. Habilitamos todo primero
+    document.querySelectorAll('.input-goles').forEach(input => input.disabled = false);
+    document.getElementById('btnGuardar').disabled = false;
+
+    // 2. Cargamos los datos de Firebase
+    const docRef = doc(db, "predicciones", nombre.toLowerCase());
+    const docSnap = await getDoc(docRef);
+    
+    if (docSnap.exists()) {
+        const data = docSnap.data().predicciones || {};
+        Object.keys(data).forEach(key => {
+            const input = document.getElementById(key);
+            if (input) input.value = data[key];
         });
+    }
+
+    // 3. Aplicamos el bloqueo solo a Jornada 1
+    aplicarBloqueos();
+});
+
 
         document.getElementById('btnGuardar').onclick = guardarQuiniela;
         document.getElementById('btnConsultaPublica').onclick = consultarPublicoSoloLectura;
