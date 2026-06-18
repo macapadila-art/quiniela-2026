@@ -196,59 +196,32 @@
         </div>
     </div>
 
-    <script type="module">
+   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    // Configuración (La que ya tienes)
-    const firebaseConfig = { /* ... tus datos ... */ };
+    // COPIA ESTE BLOQUE EXACTO
+    const firebaseConfig = {
+        apiKey: "AIzaSyD_dXyyPTCUFfA_uJs6gxSyaBmbbn2Eh14",
+        authDomain: "quiniela-mundial-2026-baf3b.firebaseapp.com",
+        projectId: "quiniela-mundial-2026-baf3b",
+        storageBucket: "quiniela-mundial-2026-baf3b.firebasestorage.app",
+        messagingSenderId: "47313550839",
+        appId: "1:47313550839:web:4341e05d36eab06d79c2f2"
+    };
+
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // 1. PRIMERO: Definimos todas las funciones
-    async function renderizarEstructura() {
-        const container = document.getElementById('gruposContainer');
-        // ... (todo el código que ya tienes para crear el HTML)
-    }
+    // Asegúrate de que tu función renderizarEstructura esté definida AQUÍ DEBAJO
+    // y que no tenga errores de sintaxis.
+    
+    window.renderizarEstructura = function() {
+        // ... tu código de renderizado ...
+        console.log("Estructura renderizada");
+    };
 
-    async function guardarQuiniela() {
-        const nombreOriginal = document.getElementById('nombreUsuario').value.trim();
-        if (!nombreOriginal) { alert("❌ Escribe tu nombre"); return; }
-
-        const docRef = doc(db, "predicciones", nombreOriginal.toLowerCase());
-        const docSnap = await getDoc(docRef);
-        
-        // Obtener predicciones anteriores si existen, si no, crear objeto vacío
-        let datosGuardados = docSnap.exists() ? docSnap.data().predicciones : {};
-
-        // Fusionar con los nuevos datos
-        document.querySelectorAll('.input-goles').forEach(input => {
-            if (input.value !== "") {
-                datosGuardados[input.id] = input.value.toString();
-            }
-        });
-
-        try {
-            await setDoc(docRef, {
-                usuario: nombreOriginal,
-                predicciones: datosGuardados,
-                ultimaActualizacion: new Date().toISOString()
-            }, { merge: true });
-            alert("✅ ¡Marcadores guardados con éxito!");
-            location.reload();
-        } catch (e) { console.error(e); alert("Error al guardar"); }
-    }
-
-    async function consultarPublicoSoloLectura() {
-        // ... (tu función actual de lectura)
-    }
-
-    // 2. SEGUNDO: Ejecutamos el renderizado
     renderizarEstructura();
-
-    // 3. TERCERO: Asignamos eventos a los botones
-    document.getElementById('btnGuardar').addEventListener('click', guardarQuiniela);
-    document.getElementById('btnConsultaPublica').addEventListener('click', consultarPublicoSoloLectura);
 </script>
 </body>
 </html>
