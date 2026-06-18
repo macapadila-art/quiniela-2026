@@ -1,244 +1,91 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiniela Mundial 2026 - Fase de Grupos</title>
-    <style>
-        :root {
-            --bg-color: #121212;
-            --card-bg: #1e1e1e;
-            --primary-green: #0a5c36;
-            --accent-gold: #ffca28;
-            --text-main: #ffffff;
-            --text-muted: #aaaaaa;
-            --border-color: #333333;
-        }
+<script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+        const firebaseConfig = {
+            apiKey: "AIzaSyD_dXyyPTCUFfA_uJs6gxSyaBmbbn2Eh14",
+            authDomain: "quiniela-mundial-2026-baf3b.firebaseapp.com",
+            projectId: "quiniela-mundial-2026-baf3b",
+            storageBucket: "quiniela-mundial-2026-baf3b.firebasestorage.app",
+            messagingSenderId: "47313550839",
+            appId: "1:47313550839:web:4341e05d36eab06d79c2f2"
+        };
 
-        .container {
-            width: 100%;
-            max-width: 650px;
-            margin-bottom: 25px;
-        }
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
-        .header-card {
-            background-color: var(--primary-green);
-            border-radius: 16px;
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        }
+        // AQUÍ DEFINES TUS JORNADAS
+        const cronograma = {
+            "Jornada 1": [
+                { id: "A1", local: "Equipo A", visita: "Equipo B" },
+                { id: "A2", local: "Equipo C", visita: "Equipo D" }
+            ],
+            "Jornada 2": [
+                { id: "B1", local: "Equipo E", visita: "Equipo F" },
+                { id: "B2", local: "Equipo G", visita: "Equipo H" }
+            ]
+        };
 
-        .header-card h1 { margin: 0 0 10px 0; font-size: 1.6rem; }
-        .header-card p { margin: 0; color: #e0e0e0; font-size: 0.95rem; }
-
-        .usuario-box {
-            background-color: var(--card-bg);
-            border-radius: 12px;
-            padding: 15px;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .grupo-grid { display: flex; flex-direction: column; gap: 25px; }
-
-        .grupo-card {
-            background-color: var(--card-bg);
-            border-radius: 16px;
-            padding: 15px;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-
-        .grupo-titulo {
-            font-size: 1.3rem;
-            color: var(--accent-gold);
-            margin-bottom: 15px;
-            font-weight: bold;
-            border-bottom: 2px solid var(--primary-green);
-            padding-bottom: 5px;
-            text-transform: uppercase;
-        }
-
-        .jornada-seccion {
-            margin-top: 15px;
-            background: rgba(255, 255, 255, 0.02);
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid #2a2a2a;
-        }
-
-        .jornada-titulo {
-            font-size: 0.9rem;
-            color: var(--accent-gold);
-            font-weight: bold;
-            text-transform: uppercase;
-            margin-bottom: 10px;
-            letter-spacing: 0.5px;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .jornada-fecha {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            font-weight: normal;
-        }
-
-        .partido {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            padding: 5px 0;
-        }
-
-        .partido:last-child { margin-bottom: 0; }
-
-        .bloque-equipo { flex: 1; display: flex; align-items: center; gap: 8px; }
-        .bloque-equipo.local { justify-content: flex-end; text-align: right; }
-        .bloque-equipo.visitante { justify-content: flex-start; text-align: left; }
-
-        .nombre-equipo { font-size: 0.95rem; }
-
-        .input-goles {
-            width: 45px;
-            padding: 8px;
-            background-color: #2a2a2a;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            color: white;
-            text-align: center;
-            font-size: 1rem;
-            font-weight: bold;
-        }
-
-        .input-goles:disabled {
-            background-color: #1a1a1a;
-            color: #888888;
-            border: 1px dashed #444444;
-            cursor: not-allowed;
-        }
-
-        .vs { font-size: 0.8rem; color: var(--text-muted); font-weight: bold; padding: 0 10px; }
-
-        button {
-            width: 100%;
-            padding: 15px;
-            background-color: #4caf50;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        button:hover { background-color: #388e3c; }
-        button:disabled { background-color: #2e4d32; color: #888888; cursor: not-allowed; box-shadow: none !important; }
-        
-        .btn-publico { background-color: #d84315; padding: 10px; font-size: 0.9rem; }
-        .btn-publico:hover { background-color: #ff5722; }
-
-        .nav-links { display: flex; justify-content: space-between; margin-top: 25px; width: 100%; }
-        .nav-links a { color: #4caf50; text-decoration: none; font-size: 0.95rem; font-weight: 500; }
-        .nav-links a:hover { text-decoration: underline; }
-    </style>
-</head>
-<body>
-
-    <div class="container">
-        <div class="header-card">
-            <h1>⚽ Quiniela Mundial 2026</h1>
-            <p>Calendario Oficial por Jornadas con Bloqueo de Modificación y Consulta de Lectura Pública.</p>
-        </div>
-    </div>
-
-    <div class="container">
-        <div class="usuario-box">
-            <div>
-                <label style="display:block; font-size:0.85rem; color:var(--text-muted); margin-bottom:5px; font-weight:bold;">TU NOMBRE DE PARTICIPANTE (Registrar):</label>
-                <input type="text" id="nombreUsuario" placeholder="Escribe tu nombre (Ej. Juan Perez)" style="width:100%; padding:12px; background-color:#2a2a2a; border:1px solid var(--border-color); border-radius:8px; color:white; font-size:1rem; box-sizing:border-box;">
-            </div>
+        async function renderizarEstructura() {
+            const container = document.getElementById('gruposContainer');
+            container.innerHTML = "";
             
-            <div style="border-top: 1px solid var(--border-color); padding-top: 12px; margin-top: 4px;">
-                <label style="display:block; font-size:0.85rem; color:var(--accent-gold); margin-bottom:5px; font-weight:bold;">COMPROBAR QUINIELA DE OTRO PARTICIPANTE (Solo Lectura):</label>
-                <input type="text" id="nombreConsultaPublica" placeholder="Escribe el nombre de tu amigo..." style="width:100%; padding:12px; background-color:#2a2a2a; border:1px solid var(--border-color); border-radius:8px; color:white; font-size:1rem; box-sizing:border-box;">
-                <button type="button" id="btnConsultaPublica" class="btn-publico" style="margin-top: 8px;">👁️ Ver Predicciones de otro Participante</button>
-            </div>
-        </div>
-    </div>
+            Object.entries(cronograma).forEach(([nombreJornada, partidos]) => {
+                let html = `<div class="grupo-card">
+                    <div class="grupo-titulo">${nombreJornada}</div>`;
+                
+                partidos.forEach(p => {
+                    html += `<div class="partido">
+                        <div class="bloque-equipo local">${p.local}</div>
+                        <input type="number" id="${p.id}_L" class="input-goles" placeholder="-">
+                        <span class="vs">VS</span>
+                        <input type="number" id="${p.id}_V" class="input-goles" placeholder="-">
+                        <div class="bloque-equipo visitante">${p.visita}</div>
+                    </div>`;
+                });
+                html += `</div>`;
+                container.innerHTML += html;
+            });
+        }
 
-    <div class="container">
-        <form id="quinielaForm">
-            <div id="gruposContainer" class="grupo-grid"></div>
-            <button type="button" id="btnGuardar" style="position: sticky; bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); z-index: 100; margin-top: 20px;">Guardar Mis Pronósticos</button>
-        </form>
+        async function guardarQuiniela() {
+            const nombre = document.getElementById('nombreUsuario').value.trim().toLowerCase();
+            if (!nombre) { alert("Escribe tu nombre"); return; }
+            
+            const predicciones = {};
+            document.querySelectorAll('.input-goles').forEach(input => {
+                if (input.value !== "") predicciones[input.id] = input.value;
+            });
 
-        <div class="nav-links">
-            <a href="posiciones.html" style="font-weight: bold; color: var(--accent-gold);">📊 Ver Tabla de Posiciones Global →</a>
-            <a href="eliminatoria.html">Segunda Fase (Eliminatorias) 🏆</a>
-        </div>
-    </div>
+            await setDoc(doc(db, "predicciones", nombre), { 
+                usuario: nombre, 
+                predicciones: predicciones,
+                fecha: new Date().toISOString() 
+            }, { merge: true });
+            
+            alert("✅ Guardado con éxito");
+        }
 
-   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        async function consultarPublicoSoloLectura() {
+            const nombre = document.getElementById('nombreConsultaPublica').value.trim().toLowerCase();
+            if (!nombre) return;
+            
+            const docSnap = await getDoc(doc(db, "predicciones", nombre));
+            if (docSnap.exists()) {
+                const data = docSnap.data().predicciones;
+                Object.keys(data).forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) { el.value = data[id]; el.disabled = true; }
+                });
+                alert("Predicciones cargadas en modo lectura.");
+            } else {
+                alert("Usuario no encontrado.");
+            }
+        }
 
-    // 1. Configuración exacta - verifica que no falte ninguna coma
-    const firebaseConfig = {
-        apiKey: "AIzaSyD_dXyyPTCUFfA_uJs6gxSyaBmbbn2Eh14",
-        authDomain: "quiniela-mundial-2026-baf3b.firebaseapp.com",
-        projectId: "quiniela-mundial-2026-baf3b",
-        storageBucket: "quiniela-mundial-2026-baf3b.firebasestorage.app",
-        messagingSenderId: "47313550839",
-        appId: "1:47313550839:web:4341e05d36eab06d79c2f2"
-    };
-
-    // 2. Inicialización segura
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    // 3. Declaración de funciones antes de usarlas
-    async function renderizarEstructura() {
-        console.log("Iniciando renderizado...");
-        // Asegúrate de que tu lógica de renderizado esté aquí
-        // [TU CÓDIGO DE RENDERIZADO EXISTENTE]
-    }
-
-    async function guardarQuiniela() {
-        // [TU LÓGICA DE GUARDADO EXISTENTE]
-    }
-
-    async function consultarPublicoSoloLectura() {
-        // [TU LÓGICA DE CONSULTA EXISTENTE]
-    }
-
-    // 4. Ejecución tras cargar el contenido
-    document.addEventListener("DOMContentLoaded", () => {
-        renderizarEstructura();
-        
-        const btnGuardar = document.getElementById('btnGuardar');
-        const btnConsulta = document.getElementById('btnConsultaPublica');
-        
-        if (btnGuardar) btnGuardar.addEventListener('click', guardarQuiniela);
-        if (btnConsulta) btnConsulta.addEventListener('click', consultarPublicoSoloLectura);
-    });
-</script>
-</body>
-</html>
+        document.addEventListener("DOMContentLoaded", () => {
+            renderizarEstructura();
+            document.getElementById('btnGuardar').addEventListener('click', guardarQuiniela);
+            document.getElementById('btnConsultaPublica').addEventListener('click', consultarPublicoSoloLectura);
+        });
+    </script>
